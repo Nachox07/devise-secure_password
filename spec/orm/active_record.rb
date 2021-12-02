@@ -2,14 +2,8 @@
 # override ActiveRecord settings for testing
 #
 ActiveRecord::Migration.verbose = false
-ActiveRecord::Base.logger = Logger.new(nil)
+ActiveRecord::Base.logger = Logger.new(File::NULL)
 
 migrate_path = File.expand_path('../rails-app/db/migrate', __dir__)
 
-if Rails.version.start_with? '6'
-  ActiveRecord::MigrationContext.new(migrate_path, ActiveRecord::SchemaMigration).migrate
-elsif Rails.version.start_with? '5.2'
-  ActiveRecord::MigrationContext.new(migrate_path).migrate
-else
-  ActiveRecord::Migrator.migrate(migrate_path)
-end
+ActiveRecord::MigrationContext.new(migrate_path, ActiveRecord::SchemaMigration).migrate
